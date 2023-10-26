@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 import random
 
 broker = "localhost"
-topic = "testTopic"
+topic = "sensor/nivel_de_agua"
 
 def connect_mqtt():
 
@@ -11,10 +11,7 @@ def connect_mqtt():
 
     @client.connect_callback()
     def on_connect(client, userdata, flags, rc):
-        if rc == 0:
-            print("Connected OK")
-        else:
-            print("Bad connection")
+        print(f"{mqtt.connack_string(rc)}")
 
     @client.log_callback()
     def on_log(client, userdata, level, buf):
@@ -25,14 +22,18 @@ def connect_mqtt():
         if rc != 0:
             print("Unexpected disconnection.")
 
-    client.connect(broker, port = 1883, keepalive = 10)
+    client.connect(broker, port = 1883, keepalive = 60)
     return client
 
 def publish_mqtt(client):
     # Generating random numbers as payload
     while True: 
         message = str(random.randint(1, 30))
-        client.publish(topic, message)
+        info = client.publish(topic, message, qos = 2)
+        
+        if info.is_published:
+            print(f"Message {message} sent to topic {topic}")
+
         time.sleep(2)
 
 def run():
