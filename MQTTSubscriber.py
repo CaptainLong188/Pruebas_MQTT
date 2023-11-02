@@ -7,7 +7,7 @@ topic = "sensor/nivel_de_agua"
 
 def connect_mqtt():
 
-    client = mqtt.Client("PruebaMQTT")
+    client = mqtt.Client("PruebaSubscriberMQTT")
 
     @client.connect_callback()
     def on_connect(client, userdata, flags, rc):
